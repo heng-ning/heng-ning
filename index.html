@@ -1,9 +1,399 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
-    <title>我的 GitHub 網站</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heng-Ning Tseng</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #222;
+      background: #f5f6fa;
+      line-height: 1.7;
+      scrollbar-gutter: stable;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: sticky;
+      top: 0;
+      background: #fff;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    nav .logo {
+      color: #333;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 1rem 0;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+    nav ul a {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: #333; }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #333;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 520px) {
+      .hamburger { display: flex; }
+      nav ul {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 0.5rem 0;
+      }
+      nav ul.open { display: flex; }
+      nav ul li a {
+        display: block;
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+      }
+      nav { position: relative; }
+    }
+
+    /* ── Hero / About ── */
+    #about {
+      background: linear-gradient(135deg, #ddf1fd 0%, #eef8fe 60%, #fafeff 100%);
+      color: #222;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      min-height: 480px;
+    }
+    .avatar-wrap {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 4px solid #78CAFA;
+      margin: 0 auto 1.5rem;
+      background-color: #fff;
+      background-image: url('photo.jpg');
+      background-size: cover;
+      background-position: center top;
+      flex-shrink: 0;
+    }
+    .avatar-wrap img {
+      display: none;
+    }
+    #about h1 {
+      font-size: 2.4rem;
+      margin-bottom: 0.4rem;
+    }
+    #about .subtitle {
+      color: #333;
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+    #about p {
+      max-width: 620px;
+      margin: 0 auto 1.5rem;
+      color: #555;
+      font-size: 1rem;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .contact-links a {
+      background: #fff;
+      color: #444;
+      border: 1px solid #c5d5fc;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .contact-links a:hover { background: #78CAFA; color: #fff; border-color: #78CAFA; }
+
+    /* ── Sections ── */
+    section {
+      padding: 2rem 5%;
+    }
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      position: relative;
+      color: #222;
+    }
+    section h2::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 4px;
+      background: #78CAFA;
+      border-radius: 2px;
+      margin-top: 0.4rem;
+    }
+
+    /* ── Education ── */
+    .edu-item {
+      background: #fff;
+      border-left: 4px solid #78CAFA;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.2rem;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .edu-item .degree { font-weight: 700; font-size: 1.05rem; }
+    .edu-item .school { color: #555; margin: 0.2rem 0; }
+    .edu-item .period { color: #999; font-size: 0.85rem; }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.6rem;
+    }
+
+    .skill-category {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .skill-category h3 {
+      font-size: 1rem;
+      color: #78CAFA;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .tag {
+      background: #f0f0f0;
+      color: #333;
+      padding: 0.35rem 1rem;
+      border-radius: 14px;
+      font-size: 0.95rem;
+    }
+
+    /* ── Work Experience ── */
+    .job {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.8rem;
+    }
+    .job-title { font-weight: 700; font-size: 1.05rem; }
+    .job-company { color: #78CAFA; font-weight: 600; }
+    .job-period {
+      color: #999;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    .job ul {
+      padding-left: 1.2rem;
+      color: #444;
+      font-size: 0.95rem;
+    }
+    .job ul li { margin-bottom: 0.4rem; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.85rem;
+      background: #f0f4ff;
+      color: #888;
+      margin-top: 2rem;
+      border-top: 1px solid #dde5fd;
+    }
+    @media (max-width: 520px) {
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <h1>哈囉！歡迎來到我的個人網站！</h1>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">Heng-Ning Tseng</div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="nav-menu">
+    <li><a href="#education">Education</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Work Experience</a></li>
+  </ul>
+</nav>
+<script>
+  const btn = document.getElementById('hamburger');
+  const menu = document.getElementById('nav-menu');
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }));
+</script>
+
+<!-- ── About ── -->
+<section id="about">
+  <div class="avatar-wrap">
+    <img src="photo.jpg" alt="avatar" fetchpriority="high">
+  </div>
+  <h1>Heng-Ning Tseng</h1>
+  <p class="subtitle">First-year Master's student in Information Management, NTPU</p>
+  <p>
+    I pursued a Master's in Information Management to bridge the gap between my humanities foundation and the tech industry.
+  </p>
+  <div class="contact-links">
+    <a href="mailto:maggie310254@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+    <a href="https://github.com/heng-ning" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/heng-ning" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+  </div>
+</section>
+
+<!-- ── Education ── -->
+<section id="education">
+  <h2>Education</h2>
+
+  <div class="edu-item">
+    <div class="degree">Master's in Information Management</div>
+    <div class="school">National Taipei University</div>
+    <div class="period">Sep 2025 – now</div>
+  </div>
+
+  <div class="edu-item">
+    <div class="degree">Bachelor's in Foreign Languages</div>
+    <div class="school">National Yilan University</div>
+    <div class="period">Sep 2017 – Jun 2021</div>
+  </div>
+</section>
+
+<!-- ── Skills ── -->
+<section id="skills">
+  <h2>Skills</h2>
+  <div class="skills-grid">
+
+    <div class="skill-category">
+      <h3>Programming Languages</h3>
+      <div class="tags">
+        <span class="tag">JavaScript</span>
+        <span class="tag">Python</span>
+        <span class="tag">PHP</span>
+        <span class="tag">SQL</span>
+      </div>
+    </div>
+
+    <div class="skill-category">
+      <h3>Tools & Frameworks</h3>
+      <div class="tags">
+        <span class="tag">Git / GitHub</span>
+        <span class="tag">Vue2</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Work Experience ── -->
+<section id="experience">
+  <h2>Work Experience</h2>
+
+  <div class="job">
+    <div class="job-header">
+      <div>
+        <div class="job-title">Frontend Developer</div>
+        <div class="job-company">Xuanyu Digital</div>
+      </div>
+      <div class="job-period">2023 – 2026</div>
+    </div>
+    <ul>
+      <li>Developed new features and resolved bugs to ensure stable product delivery.</li>
+      <li>Integrated RESTful APIs and managed data rendering and state across the application.</li>
+      <li>Conducted cross-browser compatibility testing and applied fixes for consistent UX.</li>
+      <li>Built and maintained shared component libraries to improve development efficiency.</li>
+      <li>Maintained frontend coding standards and technical documentation.</li>
+    </ul>
+  </div>
+
+  <div class="job">
+    <div class="job-header">
+      <div>
+        <div class="job-title">Full Stack Engineer</div>
+        <div class="job-company">PChome Online</div>
+      </div>
+      <div class="job-period">2022 – 2023</div>
+    </div>
+    <ul>
+      <li>Authored API documentation and designed specifications; implemented and integrated APIs accordingly.</li>
+      <li>Conducted code reviews and collaborated with team members to maintain code quality.</li>
+      <li>Performed database and API testing; worked with QA engineers to verify and validate product functionality.</li>
+      <li>Collaborated in an Agile Scrum environment for project planning and delivery.</li>
+      <li>Proficient in Git version control for day-to-day development workflows.</li>
+    </ul>
+  </div>
+
+  <!-- Add or remove .job blocks as needed -->
+</section>
+
+<footer>
+  Copyright &copy; 曾姮寧 2026
+</footer>
+
 </body>
 </html>
